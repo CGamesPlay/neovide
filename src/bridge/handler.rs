@@ -149,6 +149,15 @@ impl Handler for NeovimHandler {
                     },
                 )
             }
+            "neovide.open" => {
+                let path = arguments
+                    .first()
+                    .and_then(|v| v.as_str())
+                    .ok_or_else(|| Value::from("neovide.open: missing path argument"))?;
+                open::that(path)
+                    .map(|_| Value::Nil)
+                    .map_err(|e| Value::from(format!("neovide.open: {e}")))
+            }
             "neovide.quit" => {
                 let error_code =
                     arguments[0].as_i64().expect("Could not parse error code from neovim");
